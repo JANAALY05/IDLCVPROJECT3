@@ -101,4 +101,4 @@ final metrics) and `.pt` (best weights). For a quick test use the interactive GP
   `training/` (12/4/4) — results on DRIVE have high variance.
 - In part 2, validation and test still use the full masks (model selection with full
   masks is slightly optimistic for a real weak-label setting).
-- AI use: Claude (Anthropic) wrote most of the code.
+
