@@ -1,0 +1,6 @@
+# training outputs (large / machine-specific)
+results/*.pt
+logs/
+__pycache__/
+*.pyc
+check_*.png
