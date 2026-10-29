@@ -93,8 +93,10 @@ final metrics) and `.pt` (best weights). For a quick test use the interactive GP
 (no GPU or data needed).
 
 ## Notes
-- Every experiment uses the same `splits.json`, seed 0, Adam (lr 1e-3), PH2: 192×256,
-  batch 8, 50 epochs; DRIVE: 512×512, batch 2, 200 epochs.
+- Two seeds: **42** for the train/val/test split (`make_splits.py`), **0** for training
+  (weight initialisation, and click placement in part 2; `train.py --seed`).
+- Every experiment uses the same `splits.json`, Adam (lr 1e-3), PH2: 192×256, batch 8,
+  50 epochs; DRIVE: 512×512, batch 2, 200 epochs.
 - DRIVE's `test/` folder has no vessel annotations, so all three DRIVE splits come from
   `training/` (12/4/4) — results on DRIVE have high variance.
 - In part 2, validation and test still use the full masks (model selection with full
