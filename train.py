@@ -34,7 +34,7 @@ DEFAULTS = {  # batch size and epochs per dataset
 parser = argparse.ArgumentParser()
 parser.add_argument("--dataset", choices=["PH2", "DRIVE"], required=True)
 parser.add_argument("--model", default="encdec")
-parser.add_argument("--loss", choices=["bce", "wbce", "focal"], default="bce")
+parser.add_argument("--loss", choices=["bce", "wbce", "focal", "dice", "bce_dice"], default="bce")
 parser.add_argument("--epochs", type=int)
 parser.add_argument("--batch_size", type=int)
 parser.add_argument("--lr", type=float, default=1e-3)

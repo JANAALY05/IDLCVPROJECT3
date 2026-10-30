@@ -5,6 +5,10 @@
           (pos_weight = #background / #foreground in the training set)
   focal - focal loss (Lin et al. 2017): down-weights pixels the model already gets
           right, so training focuses on the hard ones. gamma = 2 as in the exercise.
+  dice  - soft Dice loss, 1 - Dice computed on probabilities. It only looks at the overlap
+          with the foreground, so "predict background everywhere" gives the worst loss (1)
+          instead of a low one -> counters the class-imbalance collapse.
+  bce_dice - BCE + Dice: BCE gives smooth per-pixel gradients, Dice fixes the imbalance.
 
 The exercise (lib/losses.py) wrote BCE by hand as  y_pred - y*y_pred + log(1+exp(-y_pred)).
 That is unstable for large negative y_pred (exp overflows). PyTorch's
@@ -46,6 +50,27 @@ class FocalLoss:
         return _masked_mean((1 - p_t) ** self.gamma * bce, fov)
 
 
+class DiceLoss:
+    """Soft Dice over the whole batch, only inside the FOV (exercise formula with +1 smoothing)."""
+
+    def __init__(self, smooth=1.0):
+        self.smooth = smooth
+
+    def __call__(self, logits, y, fov):
+        p = torch.sigmoid(logits) * fov
+        y = y * fov
+        inter = (p * y).sum()
+        return 1 - (2 * inter + self.smooth) / (p.sum() + y.sum() + self.smooth)
+
+
+class BCEDiceLoss:
+    def __init__(self):
+        self.bce, self.dice = BCELoss(), DiceLoss()
+
+    def __call__(self, logits, y, fov):
+        return self.bce(logits, y, fov) + self.dice(logits, y, fov)
+
+
 def get_loss(name, pos_weight=None):
     if name == "bce":
         return BCELoss()
@@ -53,4 +78,8 @@ def get_loss(name, pos_weight=None):
         return WeightedBCELoss(pos_weight)
     if name == "focal":
         return FocalLoss(gamma=2.0)
+    if name == "dice":
+        return DiceLoss()
+    if name == "bce_dice":
+        return BCEDiceLoss()
     raise ValueError(f"unknown loss {name}")

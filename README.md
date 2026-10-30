@@ -36,7 +36,7 @@ make_splits.py      fixed train/val/test splits -> splits.json (PH2 160/20/20, D
 datasets.py         PH2 and DRIVE data loaders (based on the exercise loader); check: python3 datasets.py
 metrics.py          Dice, IoU, accuracy, sensitivity, specificity (inside FOV); tests: python3 metrics.py
 models.py           EncDec (from the exercise) and U-Net; layer shapes: python3 models.py
-losses.py           BCE, weighted BCE, focal loss (all masked by the FOV / click weights)
+losses.py           BCE, weighted BCE, focal, Dice, BCE+Dice (all masked by the FOV / click weights)
 train.py            train + validate (best epoch by val Dice) + evaluate on all splits -> results/
 clicks.py           part 2: simulated clicks (random / margin) and the click training dataset
 visualize.py        figure with test predictions of all models -> predictions.png
@@ -81,6 +81,7 @@ bsub -app c02516_1g.10gb < jobs/jobscript.sh            # EncDec, BCE, PH2 + DRI
 bsub -app c02516_1g.10gb < jobs/jobscript_unet.sh       # U-Net,  BCE, PH2 + DRIVE   (~8 min)
 bsub -app c02516_1g.10gb < jobs/jobscript_ablation.sh   # U-Net, focal + wBCE        (~20 min)
 bsub -app c02516_1g.10gb < jobs/jobscript_clicks.sh     # part 2, 12 click runs      (~30 min)
+bsub -app c02516_1g.10gb < jobs/jobscript_encdec_drive_fix.sh  # EncDec on DRIVE with wBCE / Dice / BCE+Dice
 bstat                                                   # job status
 ```
 
